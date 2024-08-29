@@ -3,6 +3,7 @@ import { Button, FloatingLabel } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { SignInJoiSchema } from "../../validations/SigninSchema.joi";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function SignIn() {
   const initialFormData = {
@@ -20,12 +21,18 @@ function SignIn() {
     resolver: joiResolver(SignInJoiSchema),
   });
 
-  const submit = async (form: { email: string; password: string }) => {
-    const login = await axios.post(
-      "https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/login",
-      form,
-    );
-    console.log(login);
+  const submit = async (form: typeof initialFormData) => {
+    try {
+      const token = await axios.post(
+        "https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/login",
+        form,
+      );
+      console.log(token);
+      toast.success("Sign In Successful");
+    } catch (error) {
+      console.log(error);
+      toast.error("Sign In Failed");
+    }
   };
 
   return (
